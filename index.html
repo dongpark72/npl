@@ -561,7 +561,10 @@
         async function logout() {
             if (!confirm("로그아웃 하시겠습니까?")) return;
             try {
-                await fetch(`${API_BASE}/logout`, { method: 'POST' });
+                await fetch(`${API_BASE}/logout`, {
+                    method: 'POST',
+                    credentials: 'include'
+                });
                 window.location.href = '/login';
             } catch (e) {
                 alert("로그아웃 실패");
@@ -583,7 +586,8 @@
                 const res = await fetch(`${API_BASE}/search/address`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ addresses: addresses })
+                    body: JSON.stringify({ addresses: addresses }),
+                    credentials: 'include'
                 });
                 const data = await res.json();
 
@@ -647,7 +651,11 @@
             document.getElementById('results-area').innerHTML = '';
 
             try {
-                const res = await fetch(`${API_BASE}/upload/pdf`, { method: 'POST', body: formData });
+                const res = await fetch(`${API_BASE}/upload/pdf`, {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                });
                 const json = await res.json();
                 if (json.results) json.results.forEach(renderResultCard);
             } catch (e) { alert("Upload Error: " + e.message); }
@@ -681,7 +689,9 @@
         /* --- 공통 유틸 --- */
         async function updateStats() {
             try {
-                const res = await fetch(`${API_BASE}/status`);
+                const res = await fetch(`${API_BASE}/status`, {
+                    credentials: 'include'
+                });
                 const data = await res.json();
                 document.getElementById('status-text').innerText = `총 ${data.total_rows || 0}건 수집 중`;
             } catch (e) { }
@@ -842,7 +852,9 @@
 
             try {
                 // Fetch Locations
-                const locRes = await fetch(`${API_BASE}/court/locations`);
+                const locRes = await fetch(`${API_BASE}/court/locations`, {
+                    credentials: 'include'
+                });
                 courtLocations = await locRes.json();
                 const sidoSel = document.getElementById('sido-select');
                 Object.keys(courtLocations).forEach(sido => {
@@ -850,7 +862,9 @@
                 });
 
                 // Fetch Usages
-                const usageRes = await fetch(`${API_BASE}/court/usages`);
+                const usageRes = await fetch(`${API_BASE}/court/usages`, {
+                    credentials: 'include'
+                });
                 courtUsages = await usageRes.json();
                 const groupSel = document.getElementById('usage-group-select');
                 Object.keys(courtUsages).forEach(group => {
@@ -913,7 +927,9 @@
 
             try {
                 const url = `${API_BASE}/court/stats?sido=${sido}&sigungu=${sigungu}&dong=${dong}&usage_type=${usage}&start_month=${startStr}&end_month=${endStr}`;
-                const res = await fetch(url);
+                const res = await fetch(url, {
+                    credentials: 'include'
+                });
                 const data = await res.json();
                 renderCourtStats(data, { sido, sigungu, dong, usage, startStr, endStr });
             } catch (e) {
@@ -1130,7 +1146,9 @@
             results.innerHTML = '';
 
             try {
-                const res = await fetch(`${API_BASE}/bok/corporate-analysis`);
+                const res = await fetch(`${API_BASE}/bok/corporate-analysis`, {
+                    credentials: 'include'
+                });
                 const json = await res.json();
 
                 if (json.status === 'success') {
